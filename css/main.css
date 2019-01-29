@@ -1,5 +1,5 @@
 body, html, #content, #content > .container-fluid, #content > .container-fluid > .row {
-  height: 102%;
+  height: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -33,6 +33,10 @@ p {
 }
 
 @media (min-width: 768px) {
+    body, html, #content, #content > .container-fluid, #content > .container-fluid > .row {
+      height: 105%;
+    }
+
     #content > .container-fluid {
         text-align: left;
     }
