@@ -55,7 +55,7 @@ Software
 5 Feb 22
 </span>
 <span>
-13 min read
+9 min read
 </span>
 </div>
 <p> In this article we will look at type-maps and how they can be used as a form of dependency injection in Rust. Note: this is probably not an idiomatic approach and is more of a research article to understand this myself after seeing it used in projects such as Actix-Web and Bevy. </p>
@@ -338,229 +338,16 @@ tuple_from_tm<span style=color:#f92672>!</span> { A B C }</code></pre></div>
 to implement the <code>Callable</code> and <code>FromTypeMap</code> trait for tuples with the argument length of the given number of arguments
 in the marco. The letters represent the name of the type of each argument in the tuple. This then allows us to provide
 automatic resolution of dependencies for callables with an argument length of up to twelve.</p>
-<h1 id=the-final-code>The Final Code</h1>
-<p>Here is the final code with some additional tests to prove that everything is working as expected:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#66d9ef>use</span> std::{
-    any::{Any, TypeId},
-    collections::HashMap,
-    ops::Deref,
-    sync::Arc,
-};
-
-<span style=color:#75715e>// TypeMap is our dependency &#34;container&#34; and provides us with ways to store and retrieve some value
-</span><span style=color:#75715e>// bound to its type.
-</span><span style=color:#75715e>//
-</span><span style=color:#75715e>// The `call` method allows dependencies to be automatically injected into a function with an argument
-</span><span style=color:#75715e>// length of up to twelve.
-</span><span style=color:#75715e></span><span style=color:#75715e>#[derive(Default)]</span>
-<span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>TypeMap</span> {
-    bindings: <span style=color:#a6e22e>HashMap</span><span style=color:#f92672>&lt;</span>TypeId, Box<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>dyn</span> Any<span style=color:#f92672>&gt;&gt;</span>,
-}
-
-<span style=color:#66d9ef>impl</span> TypeMap {
-    <span style=color:#75715e>// bind stores the given value against its type within the container.
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>bind</span><span style=color:#f92672>&lt;</span>T: <span style=color:#a6e22e>Any</span><span style=color:#f92672>&gt;</span>(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self, val: <span style=color:#a6e22e>T</span>) {
-        self.bindings.insert(val.type_id(), Box::new(val));
-    }
-
-    <span style=color:#75715e>// get retrieves a reference to the value stored against the given type.
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>get</span><span style=color:#f92672>&lt;</span>T: <span style=color:#a6e22e>Any</span><span style=color:#f92672>&gt;</span>(<span style=color:#f92672>&amp;</span>self) -&gt; Option<span style=color:#f92672>&lt;&amp;</span>T<span style=color:#f92672>&gt;</span> {
-        self.bindings
-            .get(<span style=color:#f92672>&amp;</span>TypeId::of::<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>())
-            .and_then(<span style=color:#f92672>|</span>boxed<span style=color:#f92672>|</span> boxed.downcast_ref())
-    }
-
-    <span style=color:#75715e>// call calls the given callable with its arguments resolved from the values bound to their
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// types within the container.
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>call</span><span style=color:#f92672>&lt;</span>F, Args<span style=color:#f92672>&gt;</span>(<span style=color:#f92672>&amp;</span>self, callable: <span style=color:#a6e22e>F</span>)
-    <span style=color:#66d9ef>where</span>
-        F: <span style=color:#a6e22e>Callable</span><span style=color:#f92672>&lt;</span>Args<span style=color:#f92672>&gt;</span>,
-        Args: <span style=color:#a6e22e>FromTypeMap</span>,
-    {
-        callable.call(Args::from_type_map(self));
-    }
-}
-
-<span style=color:#75715e>// FromTypeMap gives us a way to build some user defined type from the container.
-</span><span style=color:#75715e></span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>trait</span> FromTypeMap {
-    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>from_type_map</span>(type_map: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>TypeMap</span>) -&gt; <span style=color:#a6e22e>Self</span>;
-}
-
-<span style=color:#75715e>// Data is a container for a `T` that we can implement `FromTypeMap` on to allow a way for
-</span><span style=color:#75715e>// the users of our type-map to have any type resolved automatically into the callable.
-</span><span style=color:#75715e></span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Data</span><span style=color:#f92672>&lt;</span>T: <span style=color:#f92672>?</span>Sized<span style=color:#f92672>&gt;</span>(Arc<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>);
-
-<span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> Data<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
-    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>new</span>(val: <span style=color:#a6e22e>T</span>) -&gt; <span style=color:#a6e22e>Self</span> {
-        Data(Arc::new(val))
-    }
-}
-
-<span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>T: <span style=color:#f92672>?</span>Sized<span style=color:#f92672>&gt;</span> Data<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
-    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>get</span>(<span style=color:#f92672>&amp;</span>self) -&gt; <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>T</span> {
-        self.<span style=color:#ae81ff>0.</span>as_ref()
-    }
-}
-
-<span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>T: <span style=color:#f92672>?</span>Sized<span style=color:#f92672>&gt;</span> Clone <span style=color:#66d9ef>for</span> Data<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
-    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>clone</span>(<span style=color:#f92672>&amp;</span>self) -&gt; <span style=color:#a6e22e>Data</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
-        Data(self.<span style=color:#ae81ff>0.</span>clone())
-    }
-}
-
-<span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>T: <span style=color:#f92672>?</span>Sized<span style=color:#f92672>&gt;</span> Deref <span style=color:#66d9ef>for</span> Data<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
-    <span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Target</span> <span style=color:#f92672>=</span> Arc<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span>;
-
-    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>deref</span>(<span style=color:#f92672>&amp;</span>self) -&gt; <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>Arc</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
-        <span style=color:#f92672>&amp;</span>self.<span style=color:#ae81ff>0</span>
-    }
-}
-
-<span style=color:#75715e>// This allows the Data&lt;T&gt; to be built from the container.
-</span><span style=color:#75715e></span><span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>T: <span style=color:#f92672>?</span>Sized <span style=color:#f92672>+</span> <span style=color:#f92672>&#39;</span>static<span style=color:#f92672>&gt;</span> FromTypeMap <span style=color:#66d9ef>for</span> Data<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
-    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>from_type_map</span>(type_map: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>TypeMap</span>) -&gt; <span style=color:#a6e22e>Self</span> {
-        type_map.get::<span style=color:#f92672>&lt;</span>Self<span style=color:#f92672>&gt;</span>().expect(<span style=color:#e6db74>&#34;type not found&#34;</span>).clone()
-    }
-}
-
-<span style=color:#75715e>// An example of how we can implement FromTypeMap for a user defined type.
-</span><span style=color:#75715e></span><span style=color:#75715e>#[derive(Copy, Clone)]</span>
-<span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>MyStruct</span> {
-    <span style=color:#75715e>#[allow(dead_code)]</span>
-    val: <span style=color:#66d9ef>i32</span>,
-}
-
-<span style=color:#66d9ef>impl</span> FromTypeMap <span style=color:#66d9ef>for</span> MyStruct {
-    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>from_type_map</span>(type_map: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>TypeMap</span>) -&gt; <span style=color:#a6e22e>Self</span> {
-        <span style=color:#f92672>*</span>type_map.get::<span style=color:#f92672>&lt;</span>Self<span style=color:#f92672>&gt;</span>().expect(<span style=color:#e6db74>&#34;type not found&#34;</span>)
-    }
-}
-
-<span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>trait</span> Callable<span style=color:#f92672>&lt;</span>Args<span style=color:#f92672>&gt;</span> {
-    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>call</span>(<span style=color:#f92672>&amp;</span>self, args: <span style=color:#a6e22e>Args</span>);
-}
-
-<span style=color:#75715e>// Here we implement `Callable` for tuples up to a length of twelve. Fn(A, B, C) for a tuple of three etc.
-</span><span style=color:#75715e></span>macro_rules! callable_tuple ({ <span style=color:#75715e>$($param</span>:<span style=color:#a6e22e>ident</span>)<span style=color:#f92672>*</span> } <span style=color:#f92672>=&gt;</span> {
-    <span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>Func, <span style=color:#75715e>$($param</span>,)<span style=color:#f92672>*&gt;</span> Callable<span style=color:#f92672>&lt;</span>(<span style=color:#75715e>$($param</span>,)<span style=color:#f92672>*</span>)<span style=color:#f92672>&gt;</span> <span style=color:#66d9ef>for</span> Func
-    <span style=color:#66d9ef>where</span>
-        Func: Fn(<span style=color:#75715e>$($param</span>),<span style=color:#f92672>*</span>),
-    {
-        <span style=color:#75715e>#[inline]</span>
-        <span style=color:#75715e>#[allow(non_snake_case)]</span>
-        <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>call</span>(<span style=color:#f92672>&amp;</span>self, (<span style=color:#75715e>$($param</span>,)<span style=color:#f92672>*</span>): (<span style=color:#75715e>$($param</span>,)<span style=color:#f92672>*</span>)) {
-            (self)(<span style=color:#75715e>$($param</span>,)<span style=color:#f92672>*</span>)
-        }
-    }
-});
-
-callable_tuple<span style=color:#f92672>!</span> {}
-callable_tuple<span style=color:#f92672>!</span> { A }
-callable_tuple<span style=color:#f92672>!</span> { A B }
-callable_tuple<span style=color:#f92672>!</span> { A B C }
-callable_tuple<span style=color:#f92672>!</span> { A B C D }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F G }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F G H }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F G H I }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F G H I J }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F G H I J K }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F G H I J K L }
-
-<span style=color:#75715e>// Here we implement `FromTypeMap` for tuples up to a length of twelve. When `from_type_map` is
-</span><span style=color:#75715e>// called on the tuple it will return a new tuple with all of its arguments resolved from the container.
-</span><span style=color:#75715e></span>macro_rules! tuple_from_tm {
-        ( <span style=color:#75715e>$($T</span>: <span style=color:#a6e22e>ident</span> )<span style=color:#f92672>+</span> ) <span style=color:#f92672>=&gt;</span> {
-            <span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span><span style=color:#75715e>$($T</span>: <span style=color:#a6e22e>FromTypeMap</span>),<span style=color:#f92672>+&gt;</span> FromTypeMap <span style=color:#66d9ef>for</span> (<span style=color:#75715e>$($T</span>,)<span style=color:#f92672>+</span>)
-            {
-                <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>from_type_map</span>(type_map: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>TypeMap</span>) -&gt; <span style=color:#a6e22e>Self</span> {
-                    (<span style=color:#75715e>$($T</span>::from_type_map(type_map),)<span style=color:#f92672>+</span>)
-                }
-            }
-        };
-    }
-
-tuple_from_tm<span style=color:#f92672>!</span> { A }
-tuple_from_tm<span style=color:#f92672>!</span> { A B }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F G }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F G H }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F G H I }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F G H I J }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F G H I J K }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F G H I J K L }
-
-<span style=color:#75715e>#[cfg(test)]</span>
-<span style=color:#66d9ef>mod</span> tests {
-    <span style=color:#66d9ef>use</span> <span style=color:#66d9ef>super</span>::<span style=color:#f92672>*</span>;
-
-    <span style=color:#75715e>#[test]</span>
-    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>a_type_can_be_bound_and_resolved</span>() {
-        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> container <span style=color:#f92672>=</span> TypeMap::default();
-        container.bind::<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;</span>(<span style=color:#ae81ff>42</span>);
-        assert_eq!(container.get::<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;</span>(), Some(<span style=color:#f92672>&amp;</span><span style=color:#ae81ff>42</span>));
-    }
-
-    <span style=color:#75715e>#[test]</span>
-    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>a_type_can_be_bound_and_resolved_through_inference</span>() {
-        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> container <span style=color:#f92672>=</span> TypeMap::default();
-        container.bind(<span style=color:#ae81ff>42</span>);
-        assert_eq!(container.get(), Some(<span style=color:#f92672>&amp;</span><span style=color:#ae81ff>42</span>));
-    }
-
-    <span style=color:#75715e>#[test]</span>
-    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>injects_dependency_based_on_argument_type</span>() {
-        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> container <span style=color:#f92672>=</span> TypeMap::default();
-        container.bind(Data::new(<span style=color:#ae81ff>42</span>));
-        container.call(<span style=color:#f92672>|</span>data: <span style=color:#a6e22e>Data</span><span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;|</span> {
-            assert_eq!(data.get(), <span style=color:#f92672>&amp;</span><span style=color:#ae81ff>42</span>);
-        });
-    }
-
-    <span style=color:#75715e>#[test]</span>
-    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>injects_multiple_dependencies_based_on_argument_type</span>() {
-        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> container <span style=color:#f92672>=</span> TypeMap::default();
-
-        <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Point</span> {
-            x: <span style=color:#66d9ef>u8</span>,
-            y: <span style=color:#66d9ef>u8</span>,
-        }
-
-        container.bind(Data::new(<span style=color:#ae81ff>42</span>));
-        container.bind(Data::new(String::from(<span style=color:#e6db74>&#34;this is a test&#34;</span>)));
-        container.bind(Data::new(Point { x: <span style=color:#ae81ff>3</span>, y: <span style=color:#ae81ff>5</span> }));
-        container.bind(MyStruct { val: <span style=color:#ae81ff>7</span> });
-
-        container.call(
-            <span style=color:#f92672>|</span>string: <span style=color:#a6e22e>Data</span><span style=color:#f92672>&lt;</span>String<span style=color:#f92672>&gt;</span>,
-             number: <span style=color:#a6e22e>Data</span><span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;</span>,
-             p1: <span style=color:#a6e22e>Data</span><span style=color:#f92672>&lt;</span>Point<span style=color:#f92672>&gt;</span>,
-             p2: <span style=color:#a6e22e>Data</span><span style=color:#f92672>&lt;</span>Point<span style=color:#f92672>&gt;</span>,
-             my_struct: <span style=color:#a6e22e>MyStruct</span><span style=color:#f92672>|</span> {
-                assert_eq!(string.as_str(), <span style=color:#e6db74>&#34;this is a test&#34;</span>);
-                assert_eq!(number.get(), <span style=color:#f92672>&amp;</span><span style=color:#ae81ff>42</span>);
-                assert_eq!(p1.x, <span style=color:#ae81ff>3</span>);
-                assert_eq!(p1.y, <span style=color:#ae81ff>5</span>);
-                assert_eq!(p2.x, <span style=color:#ae81ff>3</span>);
-                assert_eq!(p2.y, <span style=color:#ae81ff>5</span>);
-                assert_eq!(my_struct.val, <span style=color:#ae81ff>7</span>);
-            },
-        );
-    }
-
-    <span style=color:#75715e>#[test]</span>
-    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>the_values_methods_can_be_accessed_through_deref</span>() {
-        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> container <span style=color:#f92672>=</span> TypeMap::default();
-        container.bind(Data::new(String::from(<span style=color:#e6db74>&#34;test test 123&#34;</span>)));
-        container.call(<span style=color:#f92672>|</span>data: <span style=color:#a6e22e>Data</span><span style=color:#f92672>&lt;</span>String<span style=color:#f92672>&gt;|</span> {
-            assert_eq!(data.as_str(), <span style=color:#e6db74>&#34;test test 123&#34;</span>);
-        });
-    }
-}</code></pre></div>
+<h2 id=the-final-code>The Final Code</h2>
+<p>Here is a link to the <a href="https://play.rust-lang.org/?version=stable&edition=2021&gist=7fead1c15e132107b4e8ef995f4bd172">final code</a>
+where you can find everything we have implemented above as well as some comments and additional tests to help explain what&rsquo;s
+going on.</p>
+<h2 id=further-reading>Further reading</h2>
+<ul>
+<li><a href=https://github.com/bevyengine/bevy>Bevy</a> - The <code>bevy_reflect</code> crate uses a much more advanced version of this pattern
+to build up the arguments for systems.</li>
+<li><a href=https://github.com/actix/actix-web>Actix Web</a> - I took a lot of information from Actix Web as it uses this pattern to build the extractors for requests.</li>
+</ul>
 </article>
 </section>
 </main>
