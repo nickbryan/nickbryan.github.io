@@ -1,12 +1,12 @@
 <!doctype html><html lang=en><head>
-<meta name=generator content="Hugo 0.92.1">
+<meta name=generator content="Hugo 0.92.2">
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
 <title>Nick Bryan</title>
 <link rel=preconnect href=https://fonts.googleapis.com>
 <link rel=preconnect href=https://fonts.gstatic.com crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Raleway&display=swap" rel=stylesheet>
-<link href="/css/main.min.9081826fb1dcf325387a3b1a649d80d73d5c67416ffd2fe6b3e87a670a6d48b7.css" rel=stylesheet>
+<link href="/css/main.min.b613d8eb5bac457e1a6bec3d8dfeb891083d86ca16d396b2b1aeef7265af141b.css" rel=stylesheet>
 </head><body class="font-text text-white">
 <header>
 <div class="bg-midnight sticky top-0 z-50">
@@ -42,7 +42,7 @@ Software
 </nav>
 </div>
 <div class=bg-midnight-light>
-<div class="bg-gradient-to-r from-purple-700 to-pink-600 -skew-y-11 p-6 sm:p-20">
+<div class="bg-gradient-to-r from-purple-700 to-pink-600 -skew-y-11 p-6 sm:p-10">
 <div class="flex flex-col lg:flex-row items-center p-3 sm:p-9 container mx-auto text-black skew-y-11 justify-center"><img class="inline object-cover w-32 h-32 sm:w-64 sm:h-64 mr-9 mb-3 sm:mb-0 rounded-full shadow-lg" src=/images/me.jpg alt="Profile image">
 <div>
 <div class="bg-gradient-to-r from-yellow-400 to-yellow-300 -skew-y-6 rotate-6 max-w-xxs -ml-2 shadow">
@@ -74,16 +74,16 @@ In my spare time I like to study software engineering, game programming and musi
 </div>
 </header>
 <div class="bg-midnight min-h-screen relative z-40">
-<main class="flex flex-col p-6 container mx-auto">
+<main class="flex flex-col p-20 container mx-auto">
 <div class="font-title text-green-400 text-center p-10 text-3xl">
 <h1>Recent Posts</h1>
 </div>
 <ul class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-20 gap-y-10">
 <li>
 <div class="bg-gradient-to-r from-yellow-400 to-yellow-300 -skew-y-6 rotate-6 max-w-xs -ml-2 shadow">
-<a href=/software/my-seventh-post/ class="text-black hover:underline hover:text-white">
+<a href=/software/using-a-type-map-for-dependency-injection-in-rust/ class="text-black hover:underline hover:text-white">
 <div class="flex p-2 container mx-auto skew-y-6 -rotate-6 font-title">
-<h1>My Seventh Post</h1>
+<h1>Using a Type-Map for Dependency Injection in Rust</h1>
 </div>
 </a>
 </div>
@@ -92,7 +92,7 @@ In my spare time I like to study software engineering, game programming and musi
 <span class="inline-block w-3 h-3 relative -top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentcolor" d="M0 464c0 26.5 21.5 48 48 48h352c26.5.0 48-21.5 48-48V192H0v272zm320-196c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM192 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM64 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zM4e2 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H48C21.5 64 0 85.5.0 112v48h448v-48c0-26.5-21.5-48-48-48z"/></svg>
 </span>
 <span class=mr-3>
-18 Oct 21
+5 Feb 22
 </span>
 <span class="inline-block w-4 h-4 relative top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentcolor" d="M464 128H272l-64-64H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"/></svg>
 </span>
@@ -102,210 +102,13 @@ In my spare time I like to study software engineering, game programming and musi
 </div>
 <div>
 <p>
-Coiere queri abit huc fassurae subiecto pronam Destinat vinaque Lorem markdownum sum paratae recordor in nec postes tegminis corpora, et a. Mecum confinia haeret corpore terras, ipsumque in ipsa Pindo Danaas! Delamentatur ante pavidam vasta huc nec praestructa silvas. Haud sive mutanda deae magis; res cum plangens quascumque et opis. Tum Titania longa: muris Ceres timori arcet multa magnique, hunc murmure desuetaque saxea hic, causa, arma. use std::convert::From; #[derive(Debug)] struct Number { value: i32, } impl From&lt;i32> for Number { fn from(item: i32) -> Self { Number { value: item } } } fn main() { let num = Number::from(30); println!
+Type Maps In a dynamically typed language such as PHP, we can use a service container to dynamically get values bound to some type at runtime. This is usually done (in its simplest form) by having some string represent the type and storing the values in a key-value array. We can do something similar in Rust using static typing by utilising a type-map.
+A type-map is a container that stores some arbitrary value against its given unique type in order for state to be shared within an application.
 </p>
 </div>
 <div class="pt-2 text-gray-400">
-<a href=/software/my-seventh-post/ class="text-green-400 hover:text-white underline">Read More...</a>
-2 min read
-</div>
-</div>
-</li>
-<li>
-<div class="bg-gradient-to-r from-yellow-400 to-yellow-300 -skew-y-6 rotate-6 max-w-xs -ml-2 shadow">
-<a href=/software/my-sixth-post/ class="text-black hover:underline hover:text-white">
-<div class="flex p-2 container mx-auto skew-y-6 -rotate-6 font-title">
-<h1>My Sixth Post</h1>
-</div>
-</a>
-</div>
-<div class="bg-midnight-light text-gray-300 p-4 rounded-tr rounded-b shadow">
-<div class="mb-2 text-gray-400">
-<span class="inline-block w-3 h-3 relative -top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentcolor" d="M0 464c0 26.5 21.5 48 48 48h352c26.5.0 48-21.5 48-48V192H0v272zm320-196c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM192 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM64 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zM4e2 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H48C21.5 64 0 85.5.0 112v48h448v-48c0-26.5-21.5-48-48-48z"/></svg>
-</span>
-<span class=mr-3>
-18 Oct 21
-</span>
-<span class="inline-block w-4 h-4 relative top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentcolor" d="M464 128H272l-64-64H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"/></svg>
-</span>
-<span>
-<a href=/software class="hover:text-white underline">Software</a>
-</span>
-</div>
-<div>
-<p>
-Tradat pudori sublimis felicia Cervos ara inmanis Venus Lorem markdownum domini liquitur in sumo curam, conexa et aere bracchia vestis. Pati tecta adiacet.
-Et forma Thestias obsessa inductus venit frustra Hinc mercibus Cycnum Philomela et pedum paulatim vertice infestaque, vocoque motibus foedere iubebat misit densior Theseus, ferus. Possidet obliquis Rhamnusia multa, sola nec laborem regunt, haec Esse? Nubes crines intravimus monstra levarit ceu minas et quae aurora vultu, montis deduci recumbis pellitis?
-</p>
-</div>
-<div class="pt-2 text-gray-400">
-<a href=/software/my-sixth-post/ class="text-green-400 hover:text-white underline">Read More...</a>
-2 min read
-</div>
-</div>
-</li>
-<li>
-<div class="bg-gradient-to-r from-yellow-400 to-yellow-300 -skew-y-6 rotate-6 max-w-xs -ml-2 shadow">
-<a href=/software/my-fifth-post/ class="text-black hover:underline hover:text-white">
-<div class="flex p-2 container mx-auto skew-y-6 -rotate-6 font-title">
-<h1>My Fifth Post</h1>
-</div>
-</a>
-</div>
-<div class="bg-midnight-light text-gray-300 p-4 rounded-tr rounded-b shadow">
-<div class="mb-2 text-gray-400">
-<span class="inline-block w-3 h-3 relative -top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentcolor" d="M0 464c0 26.5 21.5 48 48 48h352c26.5.0 48-21.5 48-48V192H0v272zm320-196c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM192 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM64 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zM4e2 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H48C21.5 64 0 85.5.0 112v48h448v-48c0-26.5-21.5-48-48-48z"/></svg>
-</span>
-<span class=mr-3>
-18 Oct 21
-</span>
-<span class="inline-block w-4 h-4 relative top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentcolor" d="M464 128H272l-64-64H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"/></svg>
-</span>
-<span>
-<a href=/software class="hover:text-white underline">Software</a>
-</span>
-</div>
-<div>
-<p>
-Ego mucrone torique obliquo ni tanto liquido Cruribus domusque tecto frigida Lorem markdownum patientia auctor adnuerat spicis. Ponit murra: tum spectem adeo accipe iaculum antris et caput silicem secundis, ipse in videt, praedaeque quamvis. Post suis. Sororia modo perfundere decoris loquentem nostro maerens Semiramio at partem silvamque Othrys nec bellique.
-Ilioneus fibris cingebant si aures Odrysius Conditus auras sumpserat gratia illa Tyria minata intrarunt Tonantis lacertos turba haberet Ieiunia descendere nescio avus gregibus hiemalibus sacerdos Tu et mihi amplexas ludit sum Taenarides est nec properent certe recta, nec tua subdita obruta, quid.
-</p>
-</div>
-<div class="pt-2 text-gray-400">
-<a href=/software/my-fifth-post/ class="text-green-400 hover:text-white underline">Read More...</a>
-2 min read
-</div>
-</div>
-</li>
-<li>
-<div class="bg-gradient-to-r from-yellow-400 to-yellow-300 -skew-y-6 rotate-6 max-w-xs -ml-2 shadow">
-<a href=/software/my-fourth-post/ class="text-black hover:underline hover:text-white">
-<div class="flex p-2 container mx-auto skew-y-6 -rotate-6 font-title">
-<h1>My Fourth Post</h1>
-</div>
-</a>
-</div>
-<div class="bg-midnight-light text-gray-300 p-4 rounded-tr rounded-b shadow">
-<div class="mb-2 text-gray-400">
-<span class="inline-block w-3 h-3 relative -top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentcolor" d="M0 464c0 26.5 21.5 48 48 48h352c26.5.0 48-21.5 48-48V192H0v272zm320-196c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM192 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM64 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zM4e2 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H48C21.5 64 0 85.5.0 112v48h448v-48c0-26.5-21.5-48-48-48z"/></svg>
-</span>
-<span class=mr-3>
-18 Oct 21
-</span>
-<span class="inline-block w-4 h-4 relative top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentcolor" d="M464 128H272l-64-64H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"/></svg>
-</span>
-<span>
-<a href=/software class="hover:text-white underline">Software</a>
-</span>
-</div>
-<div>
-<p>
-Illo aera Nodo nulla Lorem markdownum heres retexit cum ferioque amans? Tecta femina fragmina spectat et proxima at necis et taeda. Moenia visum in ille electae venenum, sequendi in vinci si sensit tempus manus idem Minoide est?
-Rebus Iovis, Orphea tendit at caro ferocis mortis, rore, et fratrum iaculo: ferus. Petit resoluta litore cursu Maenaliosque exerces nescioquam quid: admissa discurrunt. Haec ipse proceres venenata tumida; a quibus e fulminis fores, nulli toro potius odit, ara.
-</p>
-</div>
-<div class="pt-2 text-gray-400">
-<a href=/software/my-fourth-post/ class="text-green-400 hover:text-white underline">Read More...</a>
-2 min read
-</div>
-</div>
-</li>
-<li>
-<div class="bg-gradient-to-r from-yellow-400 to-yellow-300 -skew-y-6 rotate-6 max-w-xs -ml-2 shadow">
-<a href=/software/my-third-post/ class="text-black hover:underline hover:text-white">
-<div class="flex p-2 container mx-auto skew-y-6 -rotate-6 font-title">
-<h1>My Third Post</h1>
-</div>
-</a>
-</div>
-<div class="bg-midnight-light text-gray-300 p-4 rounded-tr rounded-b shadow">
-<div class="mb-2 text-gray-400">
-<span class="inline-block w-3 h-3 relative -top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentcolor" d="M0 464c0 26.5 21.5 48 48 48h352c26.5.0 48-21.5 48-48V192H0v272zm320-196c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM192 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM64 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zM4e2 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H48C21.5 64 0 85.5.0 112v48h448v-48c0-26.5-21.5-48-48-48z"/></svg>
-</span>
-<span class=mr-3>
-18 Oct 21
-</span>
-<span class="inline-block w-4 h-4 relative top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentcolor" d="M464 128H272l-64-64H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"/></svg>
-</span>
-<span>
-<a href=/software class="hover:text-white underline">Software</a>
-</span>
-</div>
-<div>
-<p>
-Dilexit balteus lux tacito supplex elaborque nam Vana mori aquis grates Lorem markdownum notitiam; est natura et pariter alite septemflua. Commissaque novissima nec iam in certe clauserat tenuit, furor Boeotiaque! Tacto resupinus petit celebrare vocem. Victoria ire cavata patriae novitasque vides vivum pudorem vesci, semper sic. Movit ordine auxiliumque sacer Bacchei si ulla pendere lacertis arida fratremque Averna, herbas placet, contudit extemplo longa!
-Bellator et dixit mixtos loquax Moves et vertere damnatque vultum lacrimis sumptis: potest postquam pomi tinctam, loquetur, deae terga triplicis aequora parva.
-</p>
-</div>
-<div class="pt-2 text-gray-400">
-<a href=/software/my-third-post/ class="text-green-400 hover:text-white underline">Read More...</a>
-2 min read
-</div>
-</div>
-</li>
-<li>
-<div class="bg-gradient-to-r from-yellow-400 to-yellow-300 -skew-y-6 rotate-6 max-w-xs -ml-2 shadow">
-<a href=/software/my-second-post/ class="text-black hover:underline hover:text-white">
-<div class="flex p-2 container mx-auto skew-y-6 -rotate-6 font-title">
-<h1>My Second Post</h1>
-</div>
-</a>
-</div>
-<div class="bg-midnight-light text-gray-300 p-4 rounded-tr rounded-b shadow">
-<div class="mb-2 text-gray-400">
-<span class="inline-block w-3 h-3 relative -top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentcolor" d="M0 464c0 26.5 21.5 48 48 48h352c26.5.0 48-21.5 48-48V192H0v272zm320-196c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM192 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM64 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zM4e2 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H48C21.5 64 0 85.5.0 112v48h448v-48c0-26.5-21.5-48-48-48z"/></svg>
-</span>
-<span class=mr-3>
-18 Oct 21
-</span>
-<span class="inline-block w-4 h-4 relative top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentcolor" d="M464 128H272l-64-64H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"/></svg>
-</span>
-<span>
-<a href=/software class="hover:text-white underline">Software</a>
-</span>
-</div>
-<div>
-<p>
-Ad suo Lateque genetrix fremebundus inmitis dederat ora Ceres Lorem markdownum, viriles, di dixit tegumen tangam procumbit agitata vina. Est habet Arctonque, contingere: nurus vana ingeniis.
-Non mecum si sanguineam quid dicentem vocari, duri blandis. Pervenerat inde Argolicae est contra riguerunt suam, causamque misit Prytaninque mira bimembres puppim sua alia elige? Gravem haec relevare nullo, sperata actum, positis cum illud tulit comitum: optandi parentum edidit. Fugit socios nepotibus Claninque in onus imagine quae mihi, septem, mitissima secundo aquis iam pro dies.
-</p>
-</div>
-<div class="pt-2 text-gray-400">
-<a href=/software/my-second-post/ class="text-green-400 hover:text-white underline">Read More...</a>
-2 min read
-</div>
-</div>
-</li>
-<li>
-<div class="bg-gradient-to-r from-yellow-400 to-yellow-300 -skew-y-6 rotate-6 max-w-xs -ml-2 shadow">
-<a href=/software/my-first-post/ class="text-black hover:underline hover:text-white">
-<div class="flex p-2 container mx-auto skew-y-6 -rotate-6 font-title">
-<h1>My first post</h1>
-</div>
-</a>
-</div>
-<div class="bg-midnight-light text-gray-300 p-4 rounded-tr rounded-b shadow">
-<div class="mb-2 text-gray-400">
-<span class="inline-block w-3 h-3 relative -top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentcolor" d="M0 464c0 26.5 21.5 48 48 48h352c26.5.0 48-21.5 48-48V192H0v272zm320-196c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM192 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM64 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zM4e2 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H48C21.5 64 0 85.5.0 112v48h448v-48c0-26.5-21.5-48-48-48z"/></svg>
-</span>
-<span class=mr-3>
-18 Oct 21
-</span>
-<span class="inline-block w-4 h-4 relative top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentcolor" d="M464 128H272l-64-64H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"/></svg>
-</span>
-<span>
-<a href=/software class="hover:text-white underline">Software</a>
-</span>
-</div>
-<div>
-<p>
-Oculos taedas invitique dracones Superos nymphe di quam vaporibus tuae Lorem markdownum currus. Nos alia: gremio haut quod frena omnia: cibos ut alis! Sunt regunt cantu inque Venere. Mihi meo flebant terra tellus, quodcumque, parte, virgine augur.
-Blanditiis secutus monte nocens veni populorum adicis Cecropide nebula dignus umet crescentis valida conduntur Tunc esse Stridore lyncas, hac datis tangentiaque honorem. In manu nominat veloxque donare coniunctaque tamen et ac rastra iste illud fugias cornua pacto omni.
-</p>
-</div>
-<div class="pt-2 text-gray-400">
-<a href=/software/my-first-post/ class="text-green-400 hover:text-white underline">Read More...</a>
-2 min read
+<a href=/software/using-a-type-map-for-dependency-injection-in-rust/ class="text-green-400 hover:text-white underline">Read More...</a>
+14 min read
 </div>
 </div>
 </li>
@@ -315,6 +118,7 @@ Blanditiis secutus monte nocens veni populorum adicis Cecropide nebula dignus um
 <div class=bg-midnight-dark><footer class="flex flex-col items-center justify-center p-6 container mx-auto">
 <p>Copyright &#169; 2022 Nicholas Bryan</p>
 <p class=text-gray-400>Powered by <a href=https://gohugo.io/ class="underline hover:text-white">Hugo</a></p>
+<p class=text-gray-400>Custom theme built with <a href=https://tailwindcss.com/ class="underline hover:text-white">Tailwind</a></p>
 </footer></div>
 </body>
 </html>
