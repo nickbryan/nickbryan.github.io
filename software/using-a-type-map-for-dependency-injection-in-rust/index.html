@@ -5,7 +5,7 @@
 <link rel=preconnect href=https://fonts.googleapis.com>
 <link rel=preconnect href=https://fonts.gstatic.com crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Raleway&display=swap" rel=stylesheet>
-<link href="/css/main.min.b613d8eb5bac457e1a6bec3d8dfeb891083d86ca16d396b2b1aeef7265af141b.css" rel=stylesheet>
+<link href="/css/main.min.15ca3e11a6e1b87f62a72ae6f5fdae51d2ca4d737245d89cab976bdcc8ece607.css" rel=stylesheet>
 </head><body class="font-text text-white">
 <header>
 <div class="bg-midnight sticky top-0 z-50">
@@ -66,9 +66,18 @@ Software
 </div>
 </header>
 <div class="bg-midnight min-h-screen relative z-40">
-<main class="flex flex-col p-20 container mx-auto">
+<main class="flex flex-col p-5 sm:p-10 md:p-20 container mx-auto">
 <section class="max-w-full mx-auto">
-<article class="prose prose-sm md:prose-lg lg:prose-xl dark:prose-invert prose-code:before:content-none prose-code:after:content-none">
+<article class="prose
+max-w-5xl
+prose-sm
+md:prose-lg
+lg:prose-xl
+dark:prose-invert
+prose-code:before:content-none
+prose-code:after:content-none
+prose-a:text-green-400
+hover:prose-a:text-white">
 <h1 id=type-maps>Type Maps</h1>
 <p>In a dynamically typed language such as PHP, we can use a service container
 to dynamically get values bound to some type at runtime. This is usually done
@@ -324,6 +333,7 @@ macro_rules! tuple_from_tm {
         ( <span style=color:#75715e>$($T</span>: <span style=color:#a6e22e>ident</span> )<span style=color:#f92672>+</span> ) <span style=color:#f92672>=&gt;</span> {
             <span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span><span style=color:#75715e>$($T</span>: <span style=color:#a6e22e>FromTypeMap</span>),<span style=color:#f92672>+&gt;</span> FromTypeMap <span style=color:#66d9ef>for</span> (<span style=color:#75715e>$($T</span>,)<span style=color:#f92672>+</span>)
             {
+                <span style=color:#75715e>#[inline]</span>
                 <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>from_type_map</span>(type_map: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>TypeMap</span>) -&gt; <span style=color:#a6e22e>Self</span> {
                     (<span style=color:#75715e>$($T</span>::from_type_map(type_map),)<span style=color:#f92672>+</span>)
                 }
@@ -339,7 +349,7 @@ to implement the <code>Callable</code> and <code>FromTypeMap</code> trait for tu
 in the marco. The letters represent the name of the type of each argument in the tuple. This then allows us to provide
 automatic resolution of dependencies for callables with an argument length of up to twelve.</p>
 <h2 id=the-final-code>The Final Code</h2>
-<p>Here is a link to the <a href="https://play.rust-lang.org/?version=stable&edition=2021&gist=7fead1c15e132107b4e8ef995f4bd172">final code</a>
+<p>Here is a link to the <a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=5437df63d8734a4f14856f153ef700a6">final code</a>
 where you can find everything we have implemented above as well as some comments and additional tests to help explain what&rsquo;s
 going on.</p>
 <h2 id=further-reading>Further reading</h2>
