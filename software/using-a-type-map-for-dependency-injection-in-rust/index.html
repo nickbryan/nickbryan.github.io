@@ -55,7 +55,7 @@ Software
 5 Feb 22
 </span>
 <span>
-14 min read
+13 min read
 </span>
 </div>
 <p> In this article we will look at type-maps and how they can be used as a form of dependency injection in Rust. Note: this is probably not an idiomatic approach and is more of a research article to understand this myself after seeing it used in projects such as Actix-Web and Bevy. </p>
@@ -319,15 +319,6 @@ callable_tuple<span style=color:#f92672>!</span> {}
 callable_tuple<span style=color:#f92672>!</span> { A }
 callable_tuple<span style=color:#f92672>!</span> { A B }
 callable_tuple<span style=color:#f92672>!</span> { A B C }
-callable_tuple<span style=color:#f92672>!</span> { A B C D }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F G }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F G H }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F G H I }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F G H I J }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F G H I J K }
-callable_tuple<span style=color:#f92672>!</span> { A B C D E F G H I J K L }
 
 macro_rules! tuple_from_tm {
         ( <span style=color:#75715e>$($T</span>: <span style=color:#a6e22e>ident</span> )<span style=color:#f92672>+</span> ) <span style=color:#f92672>=&gt;</span> {
@@ -342,16 +333,7 @@ macro_rules! tuple_from_tm {
 
 tuple_from_tm<span style=color:#f92672>!</span> { A }
 tuple_from_tm<span style=color:#f92672>!</span> { A B }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F G }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F G H }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F G H I }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F G H I J }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F G H I J K }
-tuple_from_tm<span style=color:#f92672>!</span> { A B C D E F G H I J K L }</code></pre></div>
+tuple_from_tm<span style=color:#f92672>!</span> { A B C }</code></pre></div>
 <p>The details on how macros work is out of the scope of this article but this is essentially saying generate the code
 to implement the <code>Callable</code> and <code>FromTypeMap</code> trait for tuples with the argument length of the given number of arguments
 in the marco. The letters represent the name of the type of each argument in the tuple. This then allows us to provide
