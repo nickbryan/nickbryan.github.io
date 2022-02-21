@@ -55,7 +55,7 @@ Software
 5 Feb 22
 </span>
 <span>
-9 min read
+10 min read
 </span>
 </div>
 <p> In this article we will look at type-maps and how they can be used as a form of dependency injection in Rust. Note: this is probably not an idiomatic approach and is more of a research article to understand this myself after seeing it used in projects such as Actix-Web and Bevy. </p>
@@ -79,17 +79,21 @@ prose-code:after:content-none
 prose-a:text-green-400
 hover:prose-a:text-white">
 <h1 id=type-maps>Type Maps</h1>
-<p>In a dynamically typed language such as PHP, we can use a service container
-to dynamically get values bound to some type at runtime. This is usually done
-(in its simplest form) by having some string represent the type and storing
-the values in a key-value array. We can do something similar in Rust using
-static typing by utilising a <em>type-map</em>.</p>
-<p>A <em>type-map</em> is a container that stores some arbitrary value against its given
-unique type in order for state to be shared within an application. They are
+<p>It is common in dynamically typed languages, such as PHP, to use a service container
+to aid in dependency injection. Dependency injection containers are usually represented as some sort of map/dictionary
+where a string representation of the type is set as the key and an instance of the type is set as the value.
+We can do something similar at compile time in Rust using a <em>type-map</em> as the core of the container.</p>
+<p>A <em>type-map</em> is a container that stores some value against its given
+unique type identifier in order for state to be shared within an application. They are
 usually represented as a form of <code>HashMap</code> where the key is <code>std::any::TypeId</code>
 and the value is <code>std::any::Any</code>. This can add a dynamic element to an
-otherwise statically and strongly typed systems language. Let&rsquo;s have a look
-at how they work.</p>
+otherwise statically and strongly typed systems language.</p>
+<p>I first stumbled upon this pattern when looking at <code>systems</code> in the Bevy game engine. At the time, I couldn&rsquo;t
+understand how the game engine knew how to wire up <code>components</code>, <code>queries</code>, etc., to the systems solely based on the
+type signatures of the function arguments. I then came across it again in the Actix Web framework where it is used to
+pass shared application state, like a database connection, to multiple handlers. It was after researching the
+intricacies of this pattern that I decided it would be best to keep some notes for myself, and thus I ended up with this article.</p>
+<p>Let&rsquo;s have a look at how we can create a basic dependency injection container in Rust that can auto wire function arguments.</p>
 <h2 id=a-simple-type-map>A simple type-map</h2>
 <p>Let&rsquo;s start by building a simple type-map to demonstrate what they are. A test
 is always a good place to start:</p>
