@@ -1,11 +1,11 @@
 <!doctype html><html lang=en><head>
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
-<title>Nick Bryan | Using a Type-Map for Dependency Injection in Rust</title>
+<title>Nick Bryan | Dependency Injection in Rust with Type-Maps</title>
 <link rel=preconnect href=https://fonts.googleapis.com>
 <link rel=preconnect href=https://fonts.gstatic.com crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Raleway&display=swap" rel=stylesheet>
-<link href="/css/main.min.15ca3e11a6e1b87f62a72ae6f5fdae51d2ca4d737245d89cab976bdcc8ece607.css" rel=stylesheet>
+<link href="/css/main.min.3be4d12373bd51456a0310409a0148b901137b8094ee8d4eb0043c8c070ee1b5.css" rel=stylesheet>
 </head><body class="font-text text-white">
 <header>
 <div class="bg-midnight sticky top-0 z-50">
@@ -46,19 +46,19 @@ Software
 <section>
 <div class="max-w-prose bg-midnight text-gray-300 p-4 rounded-tr rounded-b shadow">
 <div class="font-title text-green-400 text-center p-5 text-3xl">
-<h1>Using a Type-Map for Dependency Injection in Rust</h1>
+<h1>Dependency Injection in Rust with Type-Maps</h1>
 </div>
 <div class="mb-2 text-gray-400 text-center">
 <span class="inline-block w-3 h-3 relative -top-0.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentcolor" d="M0 464c0 26.5 21.5 48 48 48h352c26.5.0 48-21.5 48-48V192H0v272zm320-196c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM192 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6.0-12-5.4-12-12v-40zM64 268c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zm0 128c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H76c-6.6.0-12-5.4-12-12v-40zM4e2 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8.0-16 7.2-16 16v48H48C21.5 64 0 85.5.0 112v48h448v-48c0-26.5-21.5-48-48-48z"/></svg>
 </span>
 <span class=mr-3>
-5 Feb 22
+26 Feb 22
 </span>
 <span>
 10 min read
 </span>
 </div>
-<p> In this article we will look at type-maps and how they can be used as a form of dependency injection in Rust. Note: this is probably not an idiomatic approach and is more of a research article to understand this myself after seeing it used in projects such as Actix-Web and Bevy. </p>
+<p> In this article we will look at type-maps and how they can help enable dependency injection in Rust. We will go a few steps further to look at how we can provide auto wiring of arguments to a given callable utilising generics and a few traits. This is a pattern seen in frameworks such as Bevy and Actix-Web to provide shared state back to the user. </p>
 </div>
 </section>
 </div>
@@ -83,13 +83,27 @@ hover:prose-a:text-white">
 to aid in dependency injection. Dependency injection containers are usually represented as some sort of map/dictionary
 where a string representation of the type is set as the key and an instance of the type is set as the value.
 We can do something similar at compile time in Rust using a <em>type-map</em> as the core of the container.</p>
+<aside class="container mx-auto pl-10">
+<div>
+<h3 class=underline>Table of Contents</h3>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#a-simple-type-map>A simple type-map</a></li>
+<li><a href=#injecting-a-single-dependency>Injecting a single dependency</a></li>
+<li><a href=#injecting-multiple-dependencies>Injecting multiple dependencies</a></li>
+<li><a href=#the-final-code>The Final Code</a></li>
+<li><a href=#further-reading>Further reading</a></li>
+</ul>
+</nav>
+</div>
+</aside>
 <p>A <em>type-map</em> is a container that stores some value against its given
 unique type identifier in order for state to be shared within an application. They are
 usually represented as a form of <code>HashMap</code> where the key is <code>std::any::TypeId</code>
 and the value is <code>std::any::Any</code>. This can add a dynamic element to an
 otherwise statically and strongly typed systems language.</p>
 <p>I first stumbled upon this pattern when looking at <code>systems</code> in the Bevy game engine. At the time, I couldn&rsquo;t
-understand how the game engine knew how to wire up <code>components</code>, <code>queries</code>, etc., to the systems solely based on the
+understand how the game engine knew how to wire up <code>components</code>, <code>queries</code>, etc., to the systems - solely based on the
 type signatures of the function arguments. I then came across it again in the Actix Web framework where it is used to
 pass shared application state, like a database connection, to multiple handlers. It was after researching the
 intricacies of this pattern that I decided it would be best to keep some notes for myself, and thus I ended up with this article.</p>
@@ -150,7 +164,7 @@ asking for, so we can actually remove the turbofish operators here.</p>
 straightforward implementation. We represent the contained bindings with a
 <code>HashMap&lt;TypeId, Box&lt;dyn Any>></code> - the value is boxed in order for the size of
 the type implementing <code>dyn Any</code> to be known at compile time.</p>
-<p><code>TypeId::of::&lt;T>()</code> returns the TypeId of the type the generic function has been instantiated with. We use it in <code>get</code>
+<p><code>TypeId::of::&lt;T>()</code> returns the <code>TypeId</code> of the type the generic function has been instantiated with. We use it in <code>get</code>
 to represent the type when accessing the <code>HashMap</code> and implicitly through <code>val.type_id()</code> in <code>bind</code>.
 This is possible due to <code>T</code> implementing the <code>std::any::Any</code> trait. Finally, the value must be unboxed
 and downcast to a reference to allow shared access.</p>
@@ -169,7 +183,7 @@ test result: ok. <span style=color:#ae81ff>2</span> passed; <span style=color:#a
 <h2 id=injecting-a-single-dependency>Injecting a single dependency</h2>
 <p>Some service containers that handle automatic injection of dependencies (auto-wiring) will provide a method that the user
 can pass a callable to in order for its dependencies to be injected via the container. Let&rsquo;s see how that might work
-in Rust. We can define another test to demonstrate what we are trying to achieve.</p>
+in Rust. We can define another test to demonstrate what we are trying to achieve:</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#75715e>#[test]</span>
 <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>injects_dependency_based_on_argument_type</span>() {
     <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> container <span style=color:#f92672>=</span> TypeMap::default();
@@ -178,9 +192,9 @@ in Rust. We can define another test to demonstrate what we are trying to achieve
         assert_eq!(data.get_ref(), <span style=color:#f92672>&amp;</span><span style=color:#ae81ff>42</span>);
     })
 }</code></pre></div>
-<p>As you can see, there is something that looks pretty <em>&ldquo;magic&rdquo;</em> going on here. How does the <code>call</code> method know to pass
+<p>As you can see, there is something that looks pretty &ldquo;magic&rdquo; going on here. How does the <code>call</code> method know to pass
 our <code>Data&lt;i32></code> into the closure? You may also be wondering why we now need a <code>Data&lt;T></code> at all and hopefully that will
-become clear as we demystify this <em>&ldquo;magic&rdquo;</em>.</p>
+become clear as we demystify this.</p>
 <p>Let&rsquo;s start by looking at the implementation of our <code>call</code> method so that we can get some context.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>call</span><span style=color:#f92672>&lt;</span>F, Args<span style=color:#f92672>&gt;</span>(<span style=color:#f92672>&amp;</span>self, callable: <span style=color:#a6e22e>F</span>)
 <span style=color:#66d9ef>where</span>
@@ -249,7 +263,7 @@ first being that it gives us thread safety and the second being that it allows u
 <code>Clone</code> is required so that we can actually clone the <code>Data&lt;T></code> which we do by just cloning the inner <code>Arc&lt;T></code> and returning a
 new <code>Data</code> with the cloned value inside. Implementing <code>Deref</code> gives us some syntactic sugar so that we can access the inner
 values methods via the dot notation (Arc also implements <code>Defef</code>). Let&rsquo;s write a test to show this in action and to also
-prove that we can pass any type.</p>
+prove that we can pass any type:</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#75715e>#[test]</span>
 <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>the_values_methods_can_be_accessed_through_deref</span>() {
     <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> container <span style=color:#f92672>=</span> TypeMap::default();
@@ -286,7 +300,7 @@ tuple with the only downside being that we will still have to be explicit about 
         (self)(a)
     }
 }</code></pre></div>
-<p>Next, we will need to implement the <code>FromTypeMap</code> trait for a single value tuple so that we can build up its arguments (invarients? - look this up)
+<p>Next, we will need to implement the <code>FromTypeMap</code> trait for a single value tuple so that we can build up its members
 automatically from the type-map:</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>A: <span style=color:#a6e22e>FromTypeMap</span><span style=color:#f92672>&gt;</span> FromTypeMap <span style=color:#66d9ef>for</span> (A,) {
     <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>from_type_map</span>(type_map: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>TypeMap</span>) -&gt; <span style=color:#a6e22e>Self</span> {
@@ -312,9 +326,9 @@ are building from the container.</p>
     }
 }</code></pre></div>
 <p>We could then carry on implementing this for as many arguments as we want to allow in the API of our type-map but that
-is a lot of repeated code that is more difficult to maintain. A common approach to solving this is to allow up to a fixed
-number of arguments, which seems to be usually 12, to be passed to our callable for dependency resolution and to generate
-this using a macro.</p>
+is a lot of repeated code that is more difficult to maintain. A common approach to solving this is to allow up to a
+reasonably sized fixed number of arguments to be passed to our callable for dependency resolution and to generate
+this using a macro:</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust>macro_rules! callable_tuple ({ <span style=color:#75715e>$($param</span>:<span style=color:#a6e22e>ident</span>)<span style=color:#f92672>*</span> } <span style=color:#f92672>=&gt;</span> {
     <span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>Func, <span style=color:#75715e>$($param</span>,)<span style=color:#f92672>*&gt;</span> Callable<span style=color:#f92672>&lt;</span>(<span style=color:#75715e>$($param</span>,)<span style=color:#f92672>*</span>)<span style=color:#f92672>&gt;</span> <span style=color:#66d9ef>for</span> Func
     <span style=color:#66d9ef>where</span>
@@ -348,10 +362,14 @@ macro_rules! tuple_from_tm {
 tuple_from_tm<span style=color:#f92672>!</span> { A }
 tuple_from_tm<span style=color:#f92672>!</span> { A B }
 tuple_from_tm<span style=color:#f92672>!</span> { A B C }</code></pre></div>
-<p>The details on how macros work is out of the scope of this article but this is essentially saying generate the code
-to implement the <code>Callable</code> and <code>FromTypeMap</code> trait for tuples with the argument length of the given number of arguments
-in the marco. The letters represent the name of the type of each argument in the tuple. This then allows us to provide
-automatic resolution of dependencies for callables with an argument length of up to twelve.</p>
+<p>The details on how macros work is out of the scope of this article but this is essentially saying:</p>
+<blockquote>
+<p>Generate the code to implement the <code>Callable</code> and <code>FromTypeMap</code> trait for tuples with the argument length of the given number of arguments
+in the marco.</p>
+</blockquote>
+<p>The letters in the macro call represent the name of the type of each individual argument in the tuple. We can then specify
+up to a set number of arguments allowed in our API. In most cases this is done for up to twelve arguments as seen in the
+final code below.</p>
 <h2 id=the-final-code>The Final Code</h2>
 <p>Here is a link to the <a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=5437df63d8734a4f14856f153ef700a6">final code</a>
 where you can find everything we have implemented above as well as some comments and additional tests to help explain what&rsquo;s
@@ -370,6 +388,10 @@ to build up the arguments for systems.</li>
 <p>Copyright &#169; 2022 Nicholas Bryan</p>
 <p class=text-gray-400>Powered by <a href=https://gohugo.io/ class="underline hover:text-white">Hugo</a></p>
 <p class=text-gray-400>Custom theme built with <a href=https://tailwindcss.com/ class="underline hover:text-white">Tailwind</a></p>
+<button id=scrollToTopBtn class="bg-green-400 rounded-md border-none p-3 cursor-pointer w-19 fixed bottom-12 right-12 z-50 translate-y-96 transition-all ease-in delay-500 opacity-0">
+<span class="text-midnight font-bold font-title">&uarr; Top</span>️
+</button>
 </footer></div>
+<script type=application/javascript>const scrollToTopBtn=document.getElementById("scrollToTopBtn"),rootElement=document.documentElement;scrollToTopBtn.addEventListener("click",()=>{rootElement.scrollTo({top:0,behavior:"smooth"})}),document.addEventListener("scroll",()=>{let a=rootElement.scrollHeight-rootElement.clientHeight;if(rootElement.scrollTop/a>.25){scrollToTopBtn.classList.remove("translate-y-96","opacity-0"),scrollToTopBtn.classList.add("opacity-1","translate-y-0");return}scrollToTopBtn.classList.remove("translate-y-0","opacity-1"),scrollToTopBtn.classList.add("translate-y-96","opacity-0")})</script>
 </body>
 </html>
