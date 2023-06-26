@@ -152,7 +152,7 @@ any type? This is where our <code>Data&lt;T></code> comes in. Let&rsquo;s have a
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>T: <span style=color:#f92672>?</span>Sized <span style=color:#f92672>+</span> <span style=color:#f92672>&#39;</span>static<span style=color:#f92672>&gt;</span> FromTypeMap <span style=color:#66d9ef>for</span> Data<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>T: <span style=color:#f92672>?</span>Sized <span style=color:#f92672>+</span> &#39;static<span style=color:#f92672>&gt;</span> FromTypeMap <span style=color:#66d9ef>for</span> Data<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>from_type_map</span>(type_map: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>TypeMap</span>) -&gt; <span style=color:#a6e22e>Self</span> {
 </span></span><span style=display:flex><span>        type_map.get::<span style=color:#f92672>&lt;</span>Self<span style=color:#f92672>&gt;</span>().expect(<span style=color:#e6db74>&#34;type not found&#34;</span>).clone()
 </span></span><span style=display:flex><span>    }
@@ -213,7 +213,7 @@ are building from the container.</p><p>This may be more clear when we look at ho
 </span></span><span style=display:flex><span>}</span></span></code></pre></div><p>We could then carry on implementing this for as many arguments as we want to allow in the API of our type-map. However, this
 is a lot of repeated code that is more difficult to maintain. A common approach to solving this is to allow up to a
 reasonably-sized fixed number of arguments to be passed to our callable for dependency resolution, and to generate
-this using a macro:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span>macro_rules! callable_tuple ({ <span style=color:#75715e>$($param</span>:<span style=color:#a6e22e>ident</span>)<span style=color:#f92672>*</span> } <span style=color:#f92672>=&gt;</span> {
+this using a macro:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span>macro_rules<span style=color:#f92672>!</span> callable_tuple ({ <span style=color:#75715e>$($param</span>:<span style=color:#a6e22e>ident</span>)<span style=color:#f92672>*</span> } <span style=color:#f92672>=&gt;</span> {
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span>Func, <span style=color:#75715e>$($param</span>,)<span style=color:#f92672>*&gt;</span> Callable<span style=color:#f92672>&lt;</span>(<span style=color:#75715e>$($param</span>,)<span style=color:#f92672>*</span>)<span style=color:#f92672>&gt;</span> <span style=color:#66d9ef>for</span> Func
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>where</span>
 </span></span><span style=display:flex><span>        Func: Fn(<span style=color:#75715e>$($param</span>),<span style=color:#f92672>*</span>),
@@ -226,12 +226,12 @@ this using a macro:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>});
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>callable_tuple<span style=color:#f92672>!</span> {}
-</span></span><span style=display:flex><span>callable_tuple<span style=color:#f92672>!</span> { A }
-</span></span><span style=display:flex><span>callable_tuple<span style=color:#f92672>!</span> { A B }
-</span></span><span style=display:flex><span>callable_tuple<span style=color:#f92672>!</span> { A B C }
+</span></span><span style=display:flex><span>callable_tuple! {}
+</span></span><span style=display:flex><span>callable_tuple! { A }
+</span></span><span style=display:flex><span>callable_tuple! { A B }
+</span></span><span style=display:flex><span>callable_tuple! { A B C }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>macro_rules! tuple_from_tm {
+</span></span><span style=display:flex><span>macro_rules<span style=color:#f92672>!</span> tuple_from_tm {
 </span></span><span style=display:flex><span>        ( <span style=color:#75715e>$($T</span>: <span style=color:#a6e22e>ident</span> )<span style=color:#f92672>+</span> ) <span style=color:#f92672>=&gt;</span> {
 </span></span><span style=display:flex><span>            <span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span><span style=color:#75715e>$($T</span>: <span style=color:#a6e22e>FromTypeMap</span>),<span style=color:#f92672>+&gt;</span> FromTypeMap <span style=color:#66d9ef>for</span> (<span style=color:#75715e>$($T</span>,)<span style=color:#f92672>+</span>)
 </span></span><span style=display:flex><span>            {
@@ -243,13 +243,13 @@ this using a macro:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;
 </span></span><span style=display:flex><span>        };
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>tuple_from_tm<span style=color:#f92672>!</span> { A }
-</span></span><span style=display:flex><span>tuple_from_tm<span style=color:#f92672>!</span> { A B }
-</span></span><span style=display:flex><span>tuple_from_tm<span style=color:#f92672>!</span> { A B C }</span></span></code></pre></div><p>The details on how macros work is out of the scope of this article, but the above is essentially saying:</p><blockquote><p>Generate the code to implement the <code>Callable</code> and <code>FromTypeMap</code> trait for tuples with the argument length of the given number of arguments
+</span></span><span style=display:flex><span>tuple_from_tm! { A }
+</span></span><span style=display:flex><span>tuple_from_tm! { A B }
+</span></span><span style=display:flex><span>tuple_from_tm! { A B C }</span></span></code></pre></div><p>The details on how macros work is out of the scope of this article, but the above is essentially saying:</p><blockquote><p>Generate the code to implement the <code>Callable</code> and <code>FromTypeMap</code> trait for tuples with the argument length of the given number of arguments
 in the macro.</p></blockquote><p>The letters in the macro call represent the name of the type of each individual argument in the tuple. We can then specify
 up to a set number of arguments allowed in our API. In most cases this is done for up to twelve arguments as seen in the
-final code below.</p><h2 id=the-final-code>The final code</h2><p>Here is a link to the <a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=5437df63d8734a4f14856f153ef700a6">final code</a>
+final code below.</p><h2 id=the-final-code>The final code</h2><p>Here is a link to the <a href="https://play.rust-lang.org/?version=stable&amp;mode=debug&amp;edition=2021&amp;gist=5437df63d8734a4f14856f153ef700a6">final code</a>
 where you can find everything we have implemented above, as well as some comments and additional tests to help explain what&rsquo;s
 going on.</p><h2 id=further-reading>Further reading</h2><ul><li><a href=https://github.com/bevyengine/bevy>Bevy</a> - The <code>bevy_reflect</code> crate uses a much more advanced version of this pattern
-to build up the arguments for systems.</li><li><a href=https://github.com/actix/actix-web>Actix Web</a> - I took a lot of information from Actix Web as it uses this pattern to build the extractors for requests.</li></ul></article></section></main></div><div class=bg-midnight-dark><footer class="flex flex-col items-center justify-center p-6 container mx-auto"><p>Copyright &#169; 2022 Nicholas Bryan</p><p class=text-gray-400>Powered by <a href=https://gohugo.io/ class="underline hover:text-white">Hugo</a></p><p class=text-gray-400>Custom theme built with <a href=https://tailwindcss.com/ class="underline hover:text-white">Tailwind</a></p><button id=scrollToTopBtn class="bg-green-400 rounded-md border-none p-3 cursor-pointer w-19 fixed bottom-12 right-12 z-50 translate-y-96 transition-all ease-in delay-500 opacity-0">
+to build up the arguments for systems.</li><li><a href=https://github.com/actix/actix-web>Actix Web</a> - I took a lot of information from Actix Web as it uses this pattern to build the extractors for requests.</li></ul></article></section></main></div><div class=bg-midnight-dark><footer class="flex flex-col items-center justify-center p-6 container mx-auto"><p>Copyright &#169; 2023 Nicholas Bryan</p><p class=text-gray-400>Powered by <a href=https://gohugo.io/ class="underline hover:text-white">Hugo</a></p><p class=text-gray-400>Custom theme built with <a href=https://tailwindcss.com/ class="underline hover:text-white">Tailwind</a></p><button id=scrollToTopBtn class="bg-green-400 rounded-md border-none p-3 cursor-pointer w-19 fixed bottom-12 right-12 z-50 translate-y-96 transition-all ease-in delay-500 opacity-0">
 <span class="text-midnight font-bold font-title">&uarr; Top</span>️</button></footer></div><script type=application/javascript>const scrollToTopBtn=document.getElementById("scrollToTopBtn"),rootElement=document.documentElement;scrollToTopBtn.addEventListener("click",()=>{rootElement.scrollTo({top:0,behavior:"smooth"})}),document.addEventListener("scroll",()=>{let e=rootElement.scrollHeight-rootElement.clientHeight;if(rootElement.scrollTop/e>.25){scrollToTopBtn.classList.remove("translate-y-96","opacity-0"),scrollToTopBtn.classList.add("opacity-1","translate-y-0");return}scrollToTopBtn.classList.remove("translate-y-0","opacity-1"),scrollToTopBtn.classList.add("translate-y-96","opacity-0")})</script></body></html>
